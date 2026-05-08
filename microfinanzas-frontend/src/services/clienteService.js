@@ -1,5 +1,5 @@
 // src/services/clienteService.js
-import api from '../config/api';
+import api from '../api/axiosConfig';
 
 export const obtenerClientes = async () => {
     try {

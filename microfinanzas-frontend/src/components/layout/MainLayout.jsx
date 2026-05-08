@@ -32,7 +32,8 @@ export const MainLayout = ({ children }) => {
       {/* SIDEBAR */}
       <aside className="w-64 bg-blue-900 text-white flex flex-col shadow-xl">
         <div className="p-6 text-center border-b border-blue-800">
-          <h2 className="text-2xl font-bold tracking-wider">WAYRA</h2>
+          {/* AQUÍ CAMBIAMOS EL NOMBRE */}
+          <h2 className="text-2xl font-bold tracking-wider text-white">KAPITAL</h2>
           <p className="text-xs text-blue-300 mt-1 uppercase">Sist. Microfinanzas</p>
         </div>
         

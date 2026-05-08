@@ -3,29 +3,21 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { MainLayout } from '../components/layout/MainLayout';
 
-// Importación de Páginas
+// Importación de Módulos
 import { Login } from '../modules/auth/pages/Login';
-
-// Componentes temporales (Placeholders) hasta que creemos los archivos reales
-const Dashboard = () => (
-    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-        <h1 className="text-2xl font-bold text-slate-800">Panel General</h1>
-        <p className="text-slate-500 mt-1">Bienvenido al sistema de gestión de microfinanzas Wayra.</p>
-    </div>
-);
-
-const Clientes = () => <div className="text-2xl font-bold">Gestión de Clientes</div>;
-const Prestamos = () => <div className="text-2xl font-bold">Módulo de Préstamos</div>;
-const Pagos = () => <div className="text-2xl font-bold">Registro de Transacciones</div>;
-const Riesgo = () => <div className="text-2xl font-bold">Análisis de Riesgo con IA</div>;
+import { DashboardPage } from '../modules/dashboard/pages/DashboardPage';
+import { ClientesLista } from '../modules/cliente/pages/ClientesLista';
+import { PrestamosLista } from '../modules/prestamo/pages/PrestamosLista';
+import { AnalisisRiesgo } from '../modules/riesgo/pages/AnalisisRiesgo';
 
 /**
- * HOC (Higher Order Component) para proteger rutas.
- * Si el usuario no tiene token, lo rebota al login.
+ * Componente para proteger rutas privadas.
+ * Verifica si el usuario está autenticado; de lo contrario, lo redirige al Login.
  */
 const PrivateRoute = ({ children }) => {
     const { isAuthenticated, loading } = useContext(AuthContext);
 
+    // Mientras se verifica el estado de autenticación, mostramos un indicador de carga
     if (loading) {
         return (
             <div className="h-screen w-full flex items-center justify-center bg-slate-50">
@@ -34,31 +26,48 @@ const PrivateRoute = ({ children }) => {
         );
     }
     
-    return isAuthenticated ? children : <Navigate to="/login" />;
+    return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
 export const AppRouter = () => {
     return (
         <BrowserRouter>
             <Routes>
-                {/* 1. RUTA PÚBLICA: Login */}
+                {/* 1. RUTA PÚBLICA: Pantalla de Inicio de Sesión */}
                 <Route path="/login" element={<Login />} />
 
-                {/* 2. RUTAS PRIVADAS: Envueltas en el Layout y Protección */}
+                {/* 2. RUTAS PRIVADAS: Protegidas y envueltas en el diseño principal (MainLayout) */}
                 <Route
                     path="/*"
                     element={
                         <PrivateRoute>
                             <MainLayout>
                                 <Routes>
-                                    <Route path="/" element={<Dashboard />} />
-                                    <Route path="/clientes" element={<Clientes />} />
-                                    <Route path="/prestamos" element={<Prestamos />} />
-                                    <Route path="/pagos" element={<Pagos />} />
-                                    <Route path="/riesgo" element={<Riesgo />} />
+                                    {/* Dashboard / Resumen General */}
+                                    <Route path="/" element={<DashboardPage />} />
                                     
-                                    {/* Redirección interna si la sub-ruta no existe */}
-                                    <Route path="*" element={<Navigate to="/" />} />
+                                    {/* Módulo de Clientes */}
+                                    <Route path="/clientes" element={<ClientesLista />} />
+                                    
+                                    {/* Módulo de Préstamos */}
+                                    <Route path="/prestamos" element={<PrestamosLista />} />
+                                    
+                                    {/* Módulo de Análisis de Riesgo (IA) */}
+                                    <Route path="/riesgo" element={<AnalisisRiesgo />} />
+
+                                    {/* Módulo de Transacciones (Placeholder) */}
+                                    <Route 
+                                        path="/pagos" 
+                                        element={
+                                            <div className="p-8 bg-white rounded-xl border border-slate-200 text-center">
+                                                <h2 className="text-xl font-bold text-slate-800">Módulo de Transacciones</h2>
+                                                <p className="text-slate-500">Este módulo está actualmente en desarrollo.</p>
+                                            </div>
+                                        } 
+                                    />
+                                    
+                                    {/* Redirección automática al Dashboard para cualquier ruta no definida */}
+                                    <Route path="*" element={<Navigate to="/" replace />} />
                                 </Routes>
                             </MainLayout>
                         </PrivateRoute>
