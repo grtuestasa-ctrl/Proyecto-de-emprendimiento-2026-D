@@ -1,0 +1,17 @@
+# Archivos de IntelliJ / IDEs
+.idea/
+*.iml
+.vscode/
+
+# Java / Maven (Backend)
+microfinanzas-backend/target/
+*.class
+
+# Node / React (Frontend)
+microfinanzas-frontend/node_modules/
+microfinanzas-frontend/dist/
+.env
+
+# Archivos de sistema
+Thumbs.db
+.DS_Store
